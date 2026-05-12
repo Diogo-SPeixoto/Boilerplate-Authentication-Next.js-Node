@@ -1,6 +1,8 @@
 # Base Authentication
 
 Sistema completo de autenticação com backend e frontend, desenvolvido com tecnologias modernas para fornecer uma base sólida para aplicações que necessitam de autenticação de usuários.
+<br/><br/>
+*Em breve em produção.*
 
 ## 📋 Funcionalidades
 
