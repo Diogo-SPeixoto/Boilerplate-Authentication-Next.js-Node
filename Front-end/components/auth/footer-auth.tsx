@@ -28,7 +28,7 @@ export const FooterAuth = ({isLoading, href, page, text}:FooterAuthProps)=>{
           variant="outline"
           className="w-full bg-transparent"
           onClick={()=>{}}
-          disabled={isLoading}
+          disabled={true /* isLoading */}
         >
           <GoogleIcon />
           Continue with Google

@@ -1,15 +1,22 @@
 "use client"
-import { useActionState, useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import { signin } from "@/app/actions/auth"
 import { InputForm } from "../input-form"
 import { FooterAuth } from "./footer-auth"
+import { toast } from "sonner"
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [response, action, isLoading] = useActionState(signin, undefined)
+  
+  useEffect(() => {
+    if (response?.errors.api) {
+      toast.error(response.errors.api, { position:"top-right" })
+    }
+  }, [response])
 
   return (
     <Card className="border-border shadow-lg">

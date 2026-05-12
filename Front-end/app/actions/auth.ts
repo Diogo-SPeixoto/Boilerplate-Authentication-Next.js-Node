@@ -4,9 +4,24 @@ import { FormState, SigninFormSchema, SignupFormSchema } from "@/lib/definitions
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { toast } from "sonner"
+interface IReturnSignin {
+  errors: {
+    email?: string[]
+    password?: string[]
+    api?: string
+  }
+}
 
-export async function signup(prevState: FormState | undefined, formData: FormData) {
+interface IReturnSignup {
+  errors: {
+    email?: string[]
+    password?: string[],
+    name?: string[],
+    api?: string
+  }
+}
+
+export async function signup(prevState: FormState | undefined, formData: FormData): Promise<undefined | IReturnSignup> {
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -31,8 +46,9 @@ export async function signup(prevState: FormState | undefined, formData: FormDat
     if(!response.ok){
       const error = await response.json()
 
-      toast.error(error.message, { position:"top-right" })
-      return
+      return {
+        errors: { api: error.message}
+      }
     }
 
     const tokens = await response.json()
@@ -42,13 +58,15 @@ export async function signup(prevState: FormState | undefined, formData: FormDat
     cookieStore.set("refreshToken", tokens.refreshToken)
 
   } catch (error) {
-    return console.error(error)
+
+    return
   }
 
   redirect("/dashboard")
 }
 
-export async function signin(prevState: FormState | undefined, formData: FormData) {
+
+export async function signin(prevState: FormState | undefined, formData: FormData): Promise<IReturnSignin| undefined> {
 
   const validatedFields = SigninFormSchema.safeParse({
     email: formData.get('email'),
@@ -72,8 +90,9 @@ export async function signin(prevState: FormState | undefined, formData: FormDat
     if(!response.ok){
       const error = await response.json()
       
-      toast.error(error.message, { position:"top-right" })
-      return
+      return {
+        errors: { api: error.message}
+      }
     }
     
     const tokens = await response.json()
