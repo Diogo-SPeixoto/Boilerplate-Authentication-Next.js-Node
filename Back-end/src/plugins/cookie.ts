@@ -3,7 +3,7 @@ import fastifyCookie from "@fastify/cookie";
 
 const cookiePlugin = fp(async (app) => {
   app.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET, 
+    secret: process.env.COOKIE_SECRET,
   });
 });
 

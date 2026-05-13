@@ -16,9 +16,9 @@ export function buildApp() {
   const app = fastify();
 
   app.register(corsPlugin);
+  app.register(cookiePlugin);
   app.register(redisPlugin);
   app.register(prismaPlugin);
-  app.register(cookiePlugin);
   app.register(jwtPlugin);
   app.register(usersRoutes, { prefix: "/users" });
   app.register(authRoutes, { prefix: "/auth" });

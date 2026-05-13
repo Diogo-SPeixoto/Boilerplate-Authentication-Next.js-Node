@@ -57,17 +57,10 @@ export async function refreshTokenHandler(
     throw error;
   }
 
-  const { valid, value } = req.unsignCookie(signedRefreshToken);
-
-  if (!valid || !value) {
-    const error: any = new Error("Invalid or missing authentication token.");
-    error.code = "INVALID_AUTH_TOKEN";
-    throw error;
-  }
-
   try {
-    const payload = await res.server.jwt.verify<{ id: string; email: string }>(
-      value
+
+    const payload = req.server.jwt.verify<{ id: string; email: string }>(
+      signedRefreshToken
     );
 
     const user = await prisma.user.findUnique({
@@ -85,17 +78,12 @@ export async function refreshTokenHandler(
     const accessToken = res.server.jwt.sign(tokenPayload, {
       expiresIn: accessTokenExpires,
     });
-    const refreshToken = res.server.jwt.sign(tokenPayload, {
-      expiresIn: refreshTokenExpires,
-    });
   
     res.setCookie("accessToken", accessToken, optionsAccessToken);
   
-    res.setCookie("refreshToken", refreshToken, optionsRefreshToken);
 
     return res.status(200).send({
       accessToken: accessToken,
-      refreshToken: refreshToken
     });
   } catch (error) {
     const err: any = new Error("Invalid or missing authentication token.");

@@ -3,6 +3,7 @@
 import { FormState, SigninFormSchema, SignupFormSchema } from "@/lib/definitions"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { NextResponse } from "next/server"
 
 interface IReturnSignin {
   errors: {
@@ -80,12 +81,15 @@ export async function signin(prevState: FormState | undefined, formData: FormDat
   }
 
   try {
-    const response = await fetch('http://localhost:3333/auth/login', {
+    const res = await fetch('http://localhost:3333/auth/login', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(validatedFields.data)
     })
 
+    const { accessToken, refreshToken } = await res.json();
+
+    const response = NextResponse.json({ ok: true });
     
     if(!response.ok){
       const error = await response.json()
@@ -94,12 +98,10 @@ export async function signin(prevState: FormState | undefined, formData: FormDat
         errors: { api: error.message}
       }
     }
-    
-    const tokens = await response.json()
 
     const cookieStore = await cookies()
-    cookieStore.set("accessToken", tokens.accessToken)
-    cookieStore.set("refreshToken", tokens.refreshToken)
+    cookieStore.set("accessToken", accessToken)
+    cookieStore.set("refreshToken", refreshToken)
 
   } catch (error) {
     console.error(error)

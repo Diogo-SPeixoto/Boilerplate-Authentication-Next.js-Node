@@ -1,4 +1,4 @@
-import { GetUser } from "@/app/api/getUser"
+import { GetUser } from "@/app/services/getUser"
 
 export default async function Dashboard (){
   const data = await GetUser()
@@ -10,7 +10,7 @@ export default async function Dashboard (){
       <p>Dados:</p>
       <p>{data.name}</p>
       <p>{data.email}</p>
-
+      
     </div>
   )
 }

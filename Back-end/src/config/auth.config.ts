@@ -4,6 +4,7 @@ const isProd = process.env.NODE_ENV === "production"
 
 export const optionsAccessToken: CookieSerializeOptions = {
   httpOnly: true,
+  signed: false,
   secure: isProd,
   sameSite: isProd ? "none" : "lax",
   path: "/",
@@ -13,6 +14,7 @@ export const optionsAccessToken: CookieSerializeOptions = {
 
 export const optionsRefreshToken: CookieSerializeOptions = {
   httpOnly: true,
+  signed: false,
   secure: isProd,
   sameSite: isProd ? "none" : "lax",
   path: "/",
